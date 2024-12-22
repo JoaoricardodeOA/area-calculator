@@ -2,10 +2,14 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import threading
+import keyboard
+import time
 
 SCALE = 3
 PAPER_W = 210 * SCALE
 PAPER_H = 297 * SCALE
+image = 'teste2.png'
 
 def show_image(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -196,4 +200,35 @@ def measure_size(path, img_original_scale=0.7,
 
     return img_result
 
-show_image(measure_size('teste2.png'))
+def minha_funcao():
+    while True:
+        if keyboard.is_pressed('t'):
+            
+            try:
+                show_image(measure_size(image))
+            except Exception as e:
+                print(e)
+            time.sleep(1)
+
+thread = threading.Thread(target=minha_funcao)
+thread.start()
+
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("Erro ao acessar a camera.")
+    exit()
+
+print("Pressione 'q' para sair.")
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Falha ao capturar imagem.")
+        break
+    cv2.imshow('Classificacao em tempo real', frame)
+    cv2.imwrite('image1.png', frame)
+    image = 'image1.png'
+    # show_image(measure_size('teste2.png'))
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+
