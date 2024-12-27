@@ -5,11 +5,14 @@ import matplotlib.pyplot as plt
 import threading
 import keyboard
 import time
+#from pynput.keyboard import Key, Controller
 
 SCALE = 3
 PAPER_W = 210 * SCALE
 PAPER_H = 297 * SCALE
 image = 'teste2.png'
+Frame = ''
+#keyboard = Controller()
 
 def show_image(img):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -202,9 +205,11 @@ def measure_size(path, img_original_scale=0.7,
 
 def minha_funcao():
     while True:
-        if keyboard.is_pressed('t'):
+        if keyboard.is_pressed ('t'):
             
             try:
+                cv2.imwrite('image1.png', Frame)
+                image = 'image1.png'
                 show_image(measure_size(image))
             except Exception as e:
                 print(e)
@@ -225,8 +230,7 @@ while True:
         print("Falha ao capturar imagem.")
         break
     cv2.imshow('Classificacao em tempo real', frame)
-    cv2.imwrite('image1.png', frame)
-    image = 'image1.png'
+    Frame = frame
     # show_image(measure_size('teste2.png'))
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
